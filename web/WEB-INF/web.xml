@@ -6,13 +6,37 @@
         </session-timeout>
     </session-config>
      <servlet>
-	<servlet-name>main</servlet-name>
+	<servlet-name>FrontController</servlet-name>
 	<servlet-class>controller.FrontController</servlet-class>
+        
+        <init-param>
+            <param-name>add_to_cart</param-name>
+            <param-value>dispatchers.AddToCartAction</param-value>
+        </init-param>
+        <init-param>
+            <param-name>update_cart</param-name>
+            <param-value>dispatchers.UpdateCartAction</param-value>
+        </init-param>
+        <init-param>
+            <param-name>view_cart</param-name>
+            <param-value>dispatchers.ViewCartAction</param-value>
+        </init-param>
+        <init-param>
+            <param-name>checkout</param-name>
+            <param-value>dispatchers.CheckoutAction</param-value>
+        </init-param>
+        <init-param>
+            <param-name>continue</param-name>
+            <param-value>dispatchers.ContinueAction</param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+        
   </servlet>
 
   <servlet-mapping>
-	<servlet-name>main</servlet-name>
+	<servlet-name>FrontController</servlet-name>
         <url-pattern>/books</url-pattern>
   </servlet-mapping>
 
-    </web-app>
+</web-app>

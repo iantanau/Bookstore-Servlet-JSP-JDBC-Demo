@@ -17,6 +17,7 @@
                 </tr>
             </thead>
             <tbody>
+                <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 <%@ page import="model.*" %>
                 <%@ page import="java.util.*" %>
                 <%@ page import="java.text.*" %>

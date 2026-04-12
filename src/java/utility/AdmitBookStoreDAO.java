@@ -48,8 +48,8 @@ public class AdmitBookStoreDAO {
             
             String isbn = rs.getString(1);
             String title = rs.getString(2);
-            String author = rs.getString(3);                    // Error 3: column 4 is price instead of author
-            double price = rs.getDouble(4);                     // Error 3: column 3 is author instead of price
+            String author = rs.getString(3);
+            double price = rs.getDouble(4);
             list.add(new Book(isbn, title, author, price));
         }
         return list;
