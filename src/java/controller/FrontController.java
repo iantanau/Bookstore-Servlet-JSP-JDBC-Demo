@@ -49,7 +49,7 @@ public class FrontController extends HttpServlet {
         response.setContentType("text/html");
 
         // Get the requested action from the request parameters
-        String requestedAction = request.getParameter("Action");
+        String requestedAction = request.getParameter("action");    // Error 4: "Action" is not matching input form in .jsp file. It should be "action"
         HttpSession session = request.getSession();
         AdmitBookStoreDAO dao = new AdmitBookStoreDAO();
         String nextPage = "";
