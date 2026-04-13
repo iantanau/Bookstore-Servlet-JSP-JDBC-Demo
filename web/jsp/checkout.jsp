@@ -13,6 +13,8 @@
         <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+        <jsp:include page="header.jsp" />
+
         <h1>Shopping Cart Check Out</h1>
 
         <form method="post" action="jsp/thankyou.jsp">
@@ -101,5 +103,8 @@
 
             <p><input type="submit" value="Submit"></p>
         </form>
+
+        <jsp:include page="footer.jsp" />
+
     </body>
 </html>

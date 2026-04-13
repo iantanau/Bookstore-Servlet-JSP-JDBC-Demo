@@ -58,5 +58,26 @@ h1 {
     text-align: center;
 }
 
+header {
+    background-color: #f8f9fa;
+    padding: 10px;
+    text-align: center;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.header-content h1 {
+    margin: 5px 0;
+    color: #333;
+}
+
 
 

@@ -14,6 +14,8 @@
     </head>
 
     <body>
+        
+        <jsp:include page="header.jsp" />
 
         <h1>Items in your Shopping Cart</h1>
         <table>
@@ -102,5 +104,7 @@
             <p><a href="./books?action=view_cart">View Shopping Cart</a></p>
         </div>
 
+        <jsp:include page="footer.jsp" />
+        
     </body>
 </html>

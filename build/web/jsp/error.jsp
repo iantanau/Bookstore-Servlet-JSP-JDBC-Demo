@@ -8,10 +8,16 @@
     </head>
     <body>
         <%@ page isErrorPage="true" %>
+
+        <jsp:include page="header.jsp" />
+
         <%
             String msg = (String) request.getAttribute("result");
             out.print("<h3>" + msg + "</h3>");
             session.invalidate();
         %>
+
+        <jsp:include page="footer.jsp" />
+
     </body>
 </html>
