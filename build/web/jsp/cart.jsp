@@ -10,74 +10,72 @@
         <%@ page import="model.*" %>
         <%@ page import="java.util.*" %>
         <%@ page import="java.text.*" %>
-
+        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
         <h1>The following items are in your shopping cart</h1>
-        <form name="form1" method="post" action="./books">
-            <input type="hidden" name="action" value="update_cart">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ISBN</th>
-                        <th>Title</th>
-                        <th>Price/unit</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
-                        <th>Remove</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                        Map items = (Map) session.getAttribute("cart");
-                        Set entries = items.entrySet();
-                        Iterator iter = entries.iterator();
-                        double totalCostOfOrder = 0.00;
-                        Book book = null;
-                        CartItem item = null;
-                        while (iter.hasNext()) {
-                            Map.Entry entry = (Map.Entry) iter.next();
-                            String isbn = (String) entry.getKey();
-                            item = (CartItem) entry.getValue();
-                            book = item.getBook();
-                            String title = book.getTitle();
-                            String price = book.getDollarPrice();
-                            int quantity = item.getQuantity();
-                            double cost = item.getOrderCost();
-                            String dollarCost = item.getDollarOrderCost();
-                            totalCostOfOrder += cost;
-                    %>
-                    <tr>
-                        <td><%= isbn%></td>
-                        <td><%= title%></td>
-                        <td><%= price%></td>
-                        <td>
-                            <input type="text" name="<%= isbn%>" size="2" value="<%= quantity%>" maxlength="4">
-                        </td>
-                        <td><%= dollarCost%></td>
-                        <td>
-                            <div align="center">
-                                <input type="checkbox" name="remove" value="<%= isbn%>">
-                            </div>
-                        </td>
-                    </tr>
-                    <%
-                        } // end while
-                        DecimalFormat dollars = new DecimalFormat("0.00");
-                        String totalOrderInDollars = "ORDER TOTAL $" + dollars.format(totalCostOfOrder);
-                    %>
+
+    <c:choose>
+        <c:when test="${not empty sessionScope.cart}">
+            <form name="form1" method="post" action="./books">
+                <input type="hidden" name="action" value="update_cart">
+                <c:set var="totalCostOfOrder" value="0" />
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ISBN</th>
+                            <th>Title</th>
+                            <th>Price/unit</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${sessionScope.cart}" var="entry">
+                        <c:set var="item" value="${entry.value}" />
+                        <c:set var="book" value="${item.book}" />
+                        <c:set var="totalCostOfOrder" value="${totalCostOfOrder + item.orderCost}" />
+                        <tr>
+                            <td>${book.isbn}</td>
+                            <td>${book.title}</td>
+                            <td>${book.dollarPrice}</td>
+                            <td>
+                                <input type="text" name="${book.isbn}" size="2" 
+                                       value="${item.quantity}" maxlength="4">
+                            </td>
+                            <td>${item.dollarOrderCost}</td>
+                            <td>
+                                <div align="center">
+                                    <input type="checkbox" name="remove" value="${book.isbn}">
+                                </div>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     <tr>
                         <td colspan="4">
                             <input type="submit" name="Submit" value="Update Cart">
                         </td>
                         <td colspan="2">
-                            <div align="right"><b><%= totalOrderInDollars%></b></div>
+                            <div align="right">
+                                <b>ORDER TOTAL $
+                                    <fmt:formatNumber value="${totalCostOfOrder}" pattern="0.00"/>
+                                </b>
+                            </div>
                         </td>
                     </tr>
-                </tbody>
-            </table>
-        </form>
-        <div class="link-container">
-            <p><a href="./books?action=continue">Continue Shopping</a></p>
-            <p><a href="./books?action=checkout">Check Out</a></p>
-        </div>
-    </body>
+                    </tbody>
+                </table>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <p>Your cart is empty.</p>
+        </c:otherwise>
+    </c:choose>
+
+    <div class="link-container">
+        <p><a href="./books?action=continue">Continue Shopping</a></p>
+        <p><a href="./books?action=checkout">Check Out</a></p>
+    </div>
+</body>
 </html>

@@ -1,3 +1,9 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="model.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.text.*" %>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -8,7 +14,7 @@
     </head>
 
     <body>
-        
+
         <h1>Items in your Shopping Cart</h1>
         <table>
             <thead>
@@ -17,48 +23,35 @@
                 </tr>
             </thead>
             <tbody>
-                <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-                <%@ page import="model.*" %>
-                <%@ page import="java.util.*" %>
-                <%@ page import="java.text.*" %>
-                <%
-                    Map items = (Map) session.getAttribute("cart");
-                    if (items != null) {
-                        Set entries = items.entrySet();
-                        Iterator iter = entries.iterator();
-                        double totalCostOfOrder = 0.00;
-                        Book book = null;
-                        CartItem item = null;
 
-                        while (iter.hasNext()) {
-                            Map.Entry entry = (Map.Entry) iter.next();
-                            item = (CartItem) entry.getValue();
-                            double cost = item.getOrderCost();
-                            totalCostOfOrder += cost;
-                %>
-                <tr>
-                    <td><%= item%></td>
-                </tr>
-                <%
-                    } // end while
-                    DecimalFormat dollars = new DecimalFormat("0.00");
-                    String totalOrderInDollars = (dollars.format(totalCostOfOrder));
+                <c:choose>
+                    <c:when test="${not empty sessionScope.cart}">
+                        <c:set var="totalCostOfOrder" value="0" />
+                        <c:forEach items="${sessionScope.cart}" var="entry">
+                            <c:set var="item" value="${entry.value}" />
+                            <tr>
+                                <td>${item}</td>
+                            </tr>
+                            <c:set var="totalCostOfOrder" value="${totalCostOfOrder + item.orderCost}" />
+                        </c:forEach>
 
-                %>
-                <tr>
-                    <td>Order Total: $<%= totalOrderInDollars%></td>
-                </tr>
-                <%
-                } else {
-                %>
-                <tr>
-                    <td>No Items in Cart</td>
-                </tr>
-                <%
-                    } // end else
-                %>
+                        <tr>
+                            <td>
+                                Order Total: $
+                                <fmt:formatNumber value="${totalCostOfOrder}" pattern="0.00"/>
+                            </td>
+                        </tr>
+
+                    </c:when>
+                    <c:otherwise>
+                        <tr>
+                            <td>No Items in Cart</td>
+                        </tr>
+                    </c:otherwise>
+                </c:choose>
             </tbody>
         </table>
+
         <hr>
         <h2>Welcome to the Online Book Store</h2>
         <form name="form1" method="post" action="./books">
@@ -75,35 +68,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%
-                        List books = (List) session.getAttribute("books");
-                        Iterator iter = books.iterator();
-                        while (iter.hasNext()) {
-                            Book book = (Book) iter.next();
-                            String isbn = book.getIsbn();
-                            String title = book.getTitle();
-                            String author = book.getAuthor();
-                            String price = book.getDollarPrice();
-                    %>
-                    <tr>
-                        <td><%= isbn%></td>
-                        <td><%= title%></td>
-                        <td><%= author%></td>
-                        <td><%= price%></td>
-                        <td>
-                            <select name="<%= isbn%>" size="1">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div align="center">
-                                <input type="checkbox" name="add" value="<%= isbn%>">
-                            </div>
-                        </td>
-                    </tr>
-                    <% } // end while %>
+                    <c:forEach items="${sessionScope.books}" var="book">
+                        <tr>
+                            <td>${book.isbn}</td>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.dollarPrice}</td>
+                            <td>
+                                <select name="${book.isbn}" size="1">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div align="center">
+                                    <input type="checkbox" name="add" value="${book.isbn}">
+                                </div>
+                            </td>
+                        </tr>
+                    </c:forEach>
+
                     <tr>
                         <td colspan="6">
                             <input type="submit" name="Details" value="Add to Cart">
@@ -112,9 +97,10 @@
                 </tbody>
             </table>
         </form>
+
         <div class="link-container">
             <p><a href="./books?action=view_cart">View Shopping Cart</a></p>
         </div>
-        
+
     </body>
 </html>

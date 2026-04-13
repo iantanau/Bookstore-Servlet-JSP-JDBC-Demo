@@ -10,6 +10,8 @@
         <%@ page import="model.*" %>
         <%@ page import="java.util.*" %>
         <%@ page import="java.text.*" %>
+        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
         <h1>Shopping Cart Check Out</h1>
 
@@ -22,28 +24,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%
-                        Map items = (Map) session.getAttribute("cart");
-                        Set entries = items.entrySet();
-                        Iterator iter = entries.iterator();
-                        double totalCostOfOrder = 0.00;
-                        Book book = null;
-                        CartItem item = null;
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.cart}">
+                            <c:set var="totalCostOfOrder" value="0" />
+                            <c:forEach items="${sessionScope.cart}" var="entry">
+                                <c:set var="item" value="${entry.value}" />
+                                <tr>
+                                    <td>${item}</td>
+                                </tr>
+                                <c:set var="totalCostOfOrder" value="${totalCostOfOrder + item.orderCost}" />
+                            </c:forEach>
 
-                        while (iter.hasNext()) {
-                            Map.Entry entry = (Map.Entry) iter.next();
-                            item = (CartItem) entry.getValue();
-                            double cost = item.getOrderCost();
-                            totalCostOfOrder += cost;
-                    %>
-                    <tr>
-                        <td><%= item%></td>
-                    </tr>
-                    <%
-                        } // end while
-                        DecimalFormat dollars = new DecimalFormat("0.00");
-                        String totalOrderInDollars = dollars.format(totalCostOfOrder);
-                    %>
+                            <tr>
+                                <td>
+                                    Order Total: $
+                                    <fmt:formatNumber value="${totalCostOfOrder}" pattern="0.00"/>
+                                </td>
+                            </tr>
+
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td>No Items in Cart</td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
                 </tbody>
             </table>
 
@@ -90,7 +95,7 @@
                 </tr>
                 <tr>
                     <td>Order Amount $</td>
-                    <td><input type="text" name="amount" value="<%= totalOrderInDollars%>"></td>
+                    <td><input type="text" name="amount" value="${totalCostOfOrder}"></td>
                 </tr>
             </table>
 
