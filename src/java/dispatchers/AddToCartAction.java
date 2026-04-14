@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Book;
 import model.CartItem;
+import model.Tbooks;
 
 /**
  *
@@ -46,7 +47,7 @@ public class AddToCartAction implements IAction {
             if (cart.containsKey(isbn)) {
                 cart.get(isbn).setQuantity(quantity);
             } else {
-                Book book = getBookFromList(isbn, session);
+                Tbooks book = getBookFromList(isbn, session);
                 CartItem item = new CartItem(book);
                 item.setQuantity(quantity);
                 cart.put(isbn, item);
@@ -56,10 +57,10 @@ public class AddToCartAction implements IAction {
     }
 
     // Retrive all books from session
-    private Book getBookFromList(String isbn, HttpSession session) {
-        List<Book> list = (List<Book>) session.getAttribute("books");
+    private Tbooks getBookFromList(String isbn, HttpSession session) {
+        List<Tbooks> list = (List<Tbooks>) session.getAttribute("books");
         if (list != null) {
-            for (Book book : list) {
+            for (Tbooks book : list) {
                 if (isbn.equals(book.getIsbn())) {
                     return book;
                 }

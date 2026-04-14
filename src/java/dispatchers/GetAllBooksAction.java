@@ -9,7 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.Book;
+import model.Tbooks;
 import utility.AdmitBookStoreDAO;
 
 /**
@@ -24,7 +24,7 @@ public class GetAllBooksAction implements IAction {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AdmitBookStoreDAO dao = new AdmitBookStoreDAO();
         try {
-            List<Book> books = dao.getAllBooks();
+            List<Tbooks> books = dao.getAllBooks();
             request.getSession().setAttribute("books", books);
             return "/jsp/titles.jsp";
         } catch (Exception ex) {
